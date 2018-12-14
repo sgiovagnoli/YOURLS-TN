@@ -3,7 +3,7 @@ Plugin for [YOURLS](http://yourls.org) (version 1.7 or newer)
 
 Description
 -----------
-Display thumbnails on YOURLS admin page ans stats page, using thumbnail.ws.
+Display thumbnails on YOURLS admin page and stats page, using thumbnail.ws.
 
 Installation
 ------------
