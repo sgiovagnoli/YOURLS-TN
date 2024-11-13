@@ -43,7 +43,7 @@ yourls_add_filter( 'table_add_row_cell_array', 'tn_table_row' );
 function tn_table_row( $rowvalue ) {
 	$tnrow = array('preview' => array(
 			'template'      => '<img src="https://api.thumbnail.ws/api/'.THUMBNAIL_WS_API_KEY.'/thumbnail/get?url=%long_url%&width='.ADM_THUMBNAIL_WS_WIDTH.'" />',
-			'long_url'      => $rowvalue[url][long_url]
+			'long_url'      => $rowvalue["url"]["long_url"]
 		))+$rowvalue;
 		
 	return $tnrow;
