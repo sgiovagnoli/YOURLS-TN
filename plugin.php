@@ -14,6 +14,8 @@ define( 'THUMBNAIL_WS_API_KEY', 'YOUR-FREE-API-KEY' );
 define( 'ADM_THUMBNAIL_WS_WIDTH', '200' );
 // Width of thumbnail on stat page (in pixel) :
 define( 'STAT_THUMBNAIL_WS_WIDTH', '500' );
+// If short link should be passed to thumbnail.ws :
+define( 'THUMBNAIL_WS_USE_SHORTURL', false );
 
 // No direct call
 if( !defined( 'YOURLS_ABSPATH' ) ) die();
@@ -41,9 +43,10 @@ function tn_table_head( $headvalue ) {
 yourls_add_filter( 'table_add_row_cell_array', 'tn_table_row' );
 
 function tn_table_row( $rowvalue ) {
+	$render_url = (THUMBNAIL_WS_USE_SHORTURL) ? $rowvalue["keyword"]["shorturl"] : $rowvalue["url"]["long_url"];
 	$tnrow = array('preview' => array(
-			'template'      => '<img src="https://api.thumbnail.ws/api/'.THUMBNAIL_WS_API_KEY.'/thumbnail/get?url=%long_url%&width='.ADM_THUMBNAIL_WS_WIDTH.'" />',
-			'long_url'      => $rowvalue["url"]["long_url"]
+			'template'      => '<img src="https://api.thumbnail.ws/api/'.THUMBNAIL_WS_API_KEY.'/thumbnail/get?url=%render_url%&width='.ADM_THUMBNAIL_WS_WIDTH.'" />',
+			'render_url'      => $render_url
 		))+$rowvalue;
 		
 	return $tnrow;
@@ -61,7 +64,8 @@ function tn_stats() {
 	$pattern = yourls_make_regexp_pattern( yourls_get_shorturl_charset() );
 	
 	if( preg_match( "@^([$pattern]+)\+(all)?/?$@", $request) ) {
-		echo '<img src="https://api.thumbnail.ws/api/'.THUMBNAIL_WS_API_KEY.'/thumbnail/get?url='.yourls_get_keyword_longurl($request).'&width='.STAT_THUMBNAIL_WS_WIDTH.'" />';
+		$render_url = (THUMBNAIL_WS_USE_SHORTURL) ?	yourls_link(yourls_sanitize_keyword($request, true)) : yourls_get_keyword_longurl($request);
+		echo '<img src="https://api.thumbnail.ws/api/'.THUMBNAIL_WS_API_KEY.'/thumbnail/get?url='.$render_url.'&width='.STAT_THUMBNAIL_WS_WIDTH.'" />';
 	}
 }
 // End : add preview on stat page
